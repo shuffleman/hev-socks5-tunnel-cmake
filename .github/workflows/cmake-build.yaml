@@ -1,0 +1,124 @@
+name: "CMake Build"
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  cmake-musl-shared:
+    name: CMake + musl (Shared Library)
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - name: arm64
+            tool: aarch64-unknown-linux-musl
+          - name: arm32
+            tool: arm-unknown-linux-musleabi
+          - name: arm32hf
+            tool: arm-unknown-linux-musleabihf
+          - name: arm32v7
+            tool: armv7-unknown-linux-musleabi
+          - name: arm32v7hf
+            tool: armv7-unknown-linux-musleabihf
+          - name: i586
+            tool: i586-unknown-linux-musl
+          - name: i686
+            tool: i686-unknown-linux-musl
+          - name: loong64
+            tool: loongarch64-unknown-linux-musl
+          - name: mips64el
+            tool: mips64el-unknown-linux-musl
+          - name: mips64
+            tool: mips64-unknown-linux-musl
+          - name: mips32el
+            tool: mipsel-unknown-linux-musl
+          - name: mips32
+            tool: mips-unknown-linux-musl
+          - name: powerpc64le
+            tool: powerpc64le-unknown-linux-musl
+          - name: powerpc64
+            tool: powerpc64-unknown-linux-musl
+          - name: powerpc
+            tool: powerpc-unknown-linux-musl
+          - name: riscv32
+            tool: riscv32-unknown-linux-musl
+          - name: riscv64
+            tool: riscv64-unknown-linux-musl
+          - name: s390x
+            tool: s390x-ibm-linux-musl
+          - name: x86_64
+            tool: x86_64-unknown-linux-musl
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          submodules: true
+
+      - name: Install CMake
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake
+
+      - name: Download musl toolchain
+        run: |
+          sudo mkdir -p /opt/x-tools
+          wget https://github.com/cross-tools/musl-cross/releases/download/20250929/${{ matrix.tool }}.tar.xz
+          sudo tar xf ${{ matrix.tool }}.tar.xz -C /opt/x-tools
+
+      - name: Build shared library with CMake
+        run: |
+          mkdir -p build
+          cd build
+          cmake .. \
+            -DCMAKE_C_COMPILER=/opt/x-tools/${{ matrix.tool }}/bin/${{ matrix.tool }}-gcc \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DENABLE_LIBRARY=ON
+          make hev-socks5-tunnel-shared -j$(nproc)
+          cp libhev-socks5-tunnel.so ../libhev-socks5-tunnel-linux-${{ matrix.name }}.so
+
+      - name: Upload shared library
+        uses: actions/upload-artifact@v4
+        with:
+          name: libhev-socks5-tunnel-linux-${{ matrix.name }}.so
+          path: libhev-socks5-tunnel-linux-${{ matrix.name }}.so
+          if-no-files-found: error
+          retention-days: 7
+
+  cmake-native-test:
+    name: CMake Native Build Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          submodules: true
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake build-essential
+
+      - name: Build with CMake
+        run: |
+          mkdir -p build
+          cd build
+          cmake .. -DCMAKE_BUILD_TYPE=Release
+          make -j$(nproc)
+          
+      - name: Build shared library
+        run: |
+          cd build
+          make hev-socks5-tunnel-shared -j$(nproc)
+          
+      - name: Verify outputs
+        run: |
+          ls -lh build/hev-socks5-tunnel
+          ls -lh build/libhev-socks5-tunnel.so
+          file build/hev-socks5-tunnel
+          file build/libhev-socks5-tunnel.so
