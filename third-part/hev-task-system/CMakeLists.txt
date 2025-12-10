@@ -1,9 +1,11 @@
 cmake_minimum_required(VERSION 3.10)
-project(hev-task-system C)
+project(hev-task-system C ASM)
 
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O3 -pipe -Wall -Wno-unused-function")
+set(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS}")
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+enable_language(ASM)
 
 add_definitions(
     -DENABLE_STACK_OVERFLOW_DETECTION
