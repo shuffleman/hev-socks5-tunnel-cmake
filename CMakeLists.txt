@@ -81,6 +81,7 @@ install(FILES ${CMAKE_SOURCE_DIR}/conf/main.yml
 
 add_library(${PROJECT_NAME}-static STATIC ${SOURCES})
 set_target_properties(${PROJECT_NAME}-static PROPERTIES OUTPUT_NAME ${PROJECT_NAME})
+target_compile_definitions(${PROJECT_NAME}-static PRIVATE -DENABLE_LIBRARY)
 target_link_libraries(${PROJECT_NAME}-static yaml lwip hev-task-system pthread)
 
 add_library(${PROJECT_NAME}-shared SHARED ${SOURCES})
@@ -88,4 +89,9 @@ set_target_properties(${PROJECT_NAME}-shared PROPERTIES
     OUTPUT_NAME ${PROJECT_NAME}
     POSITION_INDEPENDENT_CODE ON
 )
+target_compile_definitions(${PROJECT_NAME}-shared PRIVATE -DENABLE_LIBRARY)
 target_link_libraries(${PROJECT_NAME}-shared yaml lwip hev-task-system pthread)
+
+if(MSYS)
+    target_link_libraries(${PROJECT_NAME}-shared msys-2.0 ws2_32 Iphlpapi)
+endif()
