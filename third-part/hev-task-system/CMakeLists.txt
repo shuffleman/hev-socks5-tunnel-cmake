@@ -17,7 +17,10 @@ add_definitions(
     -DCONFIG_SCHED_CLOCK=CLOCK_NONE
 )
 
-file(GLOB_RECURSE HEV_TASK_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.c)
+file(GLOB_RECURSE HEV_TASK_SOURCES 
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/*.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/*.S
+)
 
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/include
