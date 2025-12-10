@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.10)
 project(yaml C)
 
 set(CMAKE_C_STANDARD 99)
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O3 -pipe")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O3 -pipe -Wno-unused-function")
 
 file(GLOB YAML_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.c)
 

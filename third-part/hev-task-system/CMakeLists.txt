@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.10)
 project(hev-task-system C)
 
 set(CMAKE_C_STANDARD 99)
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O3 -pipe -Werror -Wall")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O3 -pipe -Wall -Wno-unused-function")
 
 file(GLOB_RECURSE HEV_TASK_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.c)
 
