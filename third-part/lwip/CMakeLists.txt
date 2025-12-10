@@ -3,6 +3,7 @@ project(lwip C)
 
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O3 -pipe -Wno-unused-function")
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 file(GLOB_RECURSE LWIP_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.c)
 

@@ -3,6 +3,7 @@ project(hev-task-system C)
 
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O3 -pipe -Wall -Wno-unused-function")
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 add_definitions(
     -DENABLE_STACK_OVERFLOW_DETECTION
