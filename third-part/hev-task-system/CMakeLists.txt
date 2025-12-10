@@ -35,6 +35,8 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
+set_source_files_properties(${HEV_TASK_ASM_SOURCES} PROPERTIES LANGUAGE ASM)
+
 add_library(hev-task-system STATIC ${HEV_TASK_SOURCES})
 
 set_target_properties(hev-task-system PROPERTIES
