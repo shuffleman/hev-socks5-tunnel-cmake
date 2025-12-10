@@ -4,6 +4,13 @@ project(yaml C)
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O3 -pipe -Wno-unused-function")
 
+add_definitions(
+    -DYAML_VERSION_MAJOR=0
+    -DYAML_VERSION_MINOR=2
+    -DYAML_VERSION_PATCH=5
+    -DYAML_VERSION_STRING="0.2.5"
+)
+
 file(GLOB YAML_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.c)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
