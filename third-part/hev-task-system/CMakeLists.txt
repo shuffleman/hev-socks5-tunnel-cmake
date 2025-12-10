@@ -23,9 +23,9 @@ file(GLOB_RECURSE HEV_TASK_C_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/*.c
 )
 
-file(GLOB_RECURSE HEV_TASK_ASM_SOURCES 
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/*.S
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/*.s
+# Only include the main assembly file, not arch-specific ones
+set(HEV_TASK_ASM_SOURCES 
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/kern/task/hev-task-execute.S
 )
 
 set(HEV_TASK_SOURCES ${HEV_TASK_C_SOURCES} ${HEV_TASK_ASM_SOURCES})
